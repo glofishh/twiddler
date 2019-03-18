@@ -5,23 +5,62 @@
     <script src="data_generator.js"></script>
   </head>
   <body>
-    <script>
+    <div id="main_container">
+      <div id="tweet_container"> <!-- Contains both New Tweets and Tweets Code --> 
+        <div id="logo"> Twittler </div> 
+        <div id="show_tweets_button"> <!-- New Tweets: 123 -->
+          <h2 id="tweet_number"></h2>
+        </div>
+        <div id="inner_tweet_container"></div> <!-- Contains only the tweets --> 
+        <div id="inner_tweet_container_personal"></div> 
 
+
+    
+    <script>
       $(document).ready(function(){
         var $body = $('body');
-        $body.html('');
-
+        $body.html();
         var index = streams.home.length - 1;
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
+          $tweet.html( "@"  + "<div class='tweet_user'>" + tweet.user + "</div>" + ': ' + tweet.message);
           $tweet.appendTo($body);
           index -= 1;
         }
+        $(".tweet_user").on("click" ,function(){
+          var thisName = $(this).text(); 
+          var userNameArr =streams.users[thisName]
+
+          for(var i = 0; i < userNameArr.length; i++) {
+            console.log("the tweets",userNameArr[i].message);
+            var userNameTweets = [];
+            userNameTweets.push(userNameArr[i]);
+            var $tweet = $('<div></div>');
+            $tweet.html("<span id = 'at'>"+"@"+"</span>"+"<div class='tweet_user'>" + thisName + "</div>" + ": " + userNameArr[i].message + "<div class='time'>" + tweet.created_at + "</p>");
+            $('#inner_tweet_container').slideUp(); 
+              $('#inner_tweet_container_personal').slideDown(); 
+              $tweet.prependTo($('#inner_tweet_container_personal')).hide().slideDown("slow");
+              $("#show_tweets_button").hide();
+
+
+
+          }
+          
+          // for(var i=0; i < shortName.length; i++){
+          //     var $tweet = $('<div></div>');
+                        
+          //     $tweet.html('<div class="tweet"><p>' + tweet.message + '</p><p>' +'<div class="time">' + tweet.created_at + '</p>');
+          //     $('#inner_tweet_container').slideUp(); 
+          //     $('#inner_tweet_container_personal').slideDown(); 
+          //     $tweet.prependTo($('#inner_tweet_container_personal')).hide().slideDown("slow");
+          //     $("#show_tweets_button").hide();
+                      
+          //       }
+        });
+
 
       });
-
     </script>
   </body>
 </html>
