@@ -3,61 +3,91 @@
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css">
   </head>
   <body>
-    <div id="main_container">
-      <div id="tweet_container"> <!-- Contains both New Tweets and Tweets Code --> 
-        <div id="logo"> Twittler </div> 
-        <div id="show_tweets_button"> <!-- New Tweets: 123 -->
-          <h2 id="tweet_number"></h2>
+    <!-- Contains both New Tweets and Tweets Code --> 
+        <div class="logo"> Twittler </div> 
+        <div class="title">click username to filter timeline</div>
+        <div class="showTweets">
+          <!-- <div class="ClickMe">click me!</div>
+          <button class="button" id="get-tweets">get tweets</button> -->
         </div>
-        <div id="inner_tweet_container"></div> <!-- Contains only the tweets --> 
-        <div id="inner_tweet_container_personal"></div> 
+        <div id="tweetscontainer"></div>
+        <div id="personalTweetsContainer"></div> 
+         <!-- Contains all tweets  --> 
+        
 
 
     
     <script>
+      
       $(document).ready(function(){
+        loadTweets();
+        setInterval(loadTweets,10000)
+        
+        // var newTweets=0;
+        // var total
+        // var diff
         var $body = $('body');
         $body.html();
         var index = streams.home.length - 1;
         while(index >= 0){
           var tweet = streams.home[index];
           var $tweet = $('<div></div>');
-          $tweet.html( "@"  + "<div class='tweet_user'>" + tweet.user + "</div>" + ': ' + tweet.message);
-          $tweet.appendTo($body);
+          $tweet.html( "<div class='tweet_user'><br><p>"+ tweet.user + "</div>" + "<div class='tweet'>" + tweet.message + "</p><p>" + "<div class='time'>" + tweet.created_at + "</p><br>");
+          $tweet.appendTo('#tweetscontainer');
           index -= 1;
+          
+        }
+
+        // 
+        function loadTweets(){
+          var $container=$('#tweetscontainer');
+          $container.html(''); 
+          var allTweets=streams.home;
+          console.log(allTweets);
+          var index = streams.home.length - 1;
+          while(index >= 0){
+            var tweet = streams.home[index];
+            var $tweet = $('<div></div>');
+            $tweet.html("<div class='tweet_user'><br><p>"+ tweet.user + "</div>" + "<div class='tweet'>" + tweet.message + "</p><p>" + "<div class='time'>" + tweet.created_at + "</p><br>");
+            $tweet.appendTo('#tweetscontainer');
+            var randomColors = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+            $tweet.css("background-color",randomColors)
+            index -= 1;
+            
         }
         $(".tweet_user").on("click" ,function(){
+          var $container=$('#tweetscontainer');
           var thisName = $(this).text(); 
-          var userNameArr =streams.users[thisName]
+          console.log('thisName = ' + thisName)
+          var userNameArr =streams.users[thisName]//
 
           for(var i = 0; i < userNameArr.length; i++) {
-            console.log("the tweets",userNameArr[i].message);
-            var userNameTweets = [];
-            userNameTweets.push(userNameArr[i]);
-            var $tweet = $('<div></div>');
-            $tweet.html("<span id = 'at'>"+"@"+"</span>"+"<div class='tweet_user'>" + thisName + "</div>" + ": " + userNameArr[i].message + "<div class='time'>" + tweet.created_at + "</p>");
-            $('#inner_tweet_container').slideUp(); 
-              $('#inner_tweet_container_personal').slideDown(); 
-              $tweet.prependTo($('#inner_tweet_container_personal')).hide().slideDown("slow");
-              $("#show_tweets_button").hide();
+              console.log("the tweets",userNameArr[i].message);
+              
+              var $tweet = $('<div></div>');
+              $tweet.html("<div class='tweet_user'><br><p>" + thisName + "</div>" + "<div class='tweet'>" + userNameArr[i].message + "</p><p>" + "<div class='time'>" + tweet.created_at + "</p><br>");
+              $container.slideUp();
+              $('#personalTweetsContainer').slideDown(); 
+              $tweet.prependTo($('#personalTweetsContainer')).hide().slideDown("slow");
+              var randomColors = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+              $tweet.css("background-color",randomColors)
+
+              
+                //hide is not 
 
 
 
           }
+
           
-          // for(var i=0; i < shortName.length; i++){
-          //     var $tweet = $('<div></div>');
-                        
-          //     $tweet.html('<div class="tweet"><p>' + tweet.message + '</p><p>' +'<div class="time">' + tweet.created_at + '</p>');
-          //     $('#inner_tweet_container').slideUp(); 
-          //     $('#inner_tweet_container_personal').slideDown(); 
-          //     $tweet.prependTo($('#inner_tweet_container_personal')).hide().slideDown("slow");
-          //     $("#show_tweets_button").hide();
-                      
-          //       }
+          
         });
+          
+        }
+
 
 
       });
